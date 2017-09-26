@@ -11,51 +11,9 @@
     <title>Index</title>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/css/DataTables/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/DataTables/fixedColumns.bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
-    <style>
-        span.field-validation-error {
-            color: red;
-        }
-
-
-        .blur {
-            opacity: 0.3;
-            pointer-events: none;
-            background-color: #d9d9d9
-        }
-
-        .overlay {
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-        .ui-dialog {
-            padding: 0;
-        }
-        .ui-dialog .ui-dialog-title {
-            margin: 10px 10px;
-        }
-        .ui-dialog .ui-dialog-titlebar {
-            margin-bottom: 15px;
-        }
-        .ui-dialog .ui-dialog-buttonpane {
-            
-            margin-top: 0;
-            
-        }
-        .ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
-            border-bottom-right-radius: 0;
-            border-bottom-left-radius: 0;
-            border-top-right-radius: 0;
-            border-top-left-radius: 0;
-        }
-
-        .pagination {
-            margin: 10px 0 !important;
-        }
-    </style>
+    <link href="~/Content/css/DataTables/jqueryDataTables.popupInput.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -66,10 +24,10 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <strong style="font-size: 25px">Jquery Datables</strong>
-                    <a class="popup btn btn-success pull-right" href="@Url.Action("Save","Home", new {id = 0})">Add New Employee</a>
+                    <a class="popup btn btn-success pull-right" href="@Url.Action("InserUpdate","Home", new {id = 0})">Add New Employee</a>
                 </div>
                 <div class="panel-body">
-                    <table class="table table-bordered" id="myDatatable">
+                    <table class="table table-bordered table-condensed" id="myDatatable" width="100%">
                         <thead>
                             <tr>
                                 <th>First Name</th>
@@ -77,10 +35,31 @@
                                 <th>Email</th>
                                 <th>City</th>
                                 <th>Country</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>City</th>
+                                <th>Country</th>
+                                <th>
+                                    <div style="display: inline-block; width: 100px">
+                                        Actions
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>City</th>
+                                <th>Country</th>
+                                <th>Actions</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -94,20 +73,33 @@
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/Scripts/DataTatables/jquery.dataTables.min.js"></script>
-    <script src="~/Scripts/DataTatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/DataTatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/DataTatables/dataTables.fixedColumns.min.js"></script>
     <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
 
     <script>
         $(document).ready(function () {
-
+            // Setup - add a text input to each header cell
+            $('#myDatatable thead tr:eq(0) th:not(:last)').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            });
 
             var oTable = $('#myDatatable').DataTable({
                 "scrollX": true,
+                "fixedColumns": {
+                    leftColumns: 1,
+                    rightColumns: 1
+                },
                 "ajax": {
                     "url": '/home/GetEmployees',
                     "type": "get",
                     "datatype": "json"
                 },
+                "columnDefs": [
+                    { "className": "dt-center", "targets": 5 }
+                ],
+
                 "columns": [
                     { "data": "FirstName", "width": "200px" },
                     { "data": "LastName", "width": "100px" },
@@ -116,19 +108,29 @@
                     { "data": "Country", "width": "120px" },
                     {
                         "data": "EmployeeId",
-                        "width": "50px",
+                        "width": "200px",
+                        "orderable": false,
                         "render": function (data) {
-                            return '<a class="popup" href="/home/save/' + data + '">Edit</a>';
+                            return '<a class="popup update btn btn-primary btn-xs" href="/home/InserUpdate/' + data + '">Edit</a>' + " " +
+                                '<a class="popup delete btn btn-danger btn-xs" href="/home/delete/' + data + '">Delete</a>';
                         }
                     },
-                    {
-                        "data": "EmployeeId",
-                        "width": "50px",
-                        "render": function (data) {
-                            return '<a class="popup" href="/home/delete/' + data + '">Delete</a>';
-                        }
-                    }
+                    //{
+                    //    "data": "EmployeeId",
+                    //    "width": "50px",
+                    //    "orderable": false,
+                    //    "render": function (data) {
+                    //        return '<a class="popup btn btn-danger btn-xs" href="/home/delete/' + data + '">Delete</a>';
+                    //    }
+                    //}
                 ]
+            });
+
+            // Individual Column Searching In case of Some Fixed Column
+            $(oTable.table().container()).on('focusout', 'thead input', function () {
+                oTable.column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
             });
 
             var $dialog;
@@ -140,6 +142,8 @@
                     $.validator.unobtrusive.parse('form');
 
                 });
+
+                var wWidth = $(window).width();
                 
                 $('.overlay').addClass("blur");
                 $dialog = $('<div class="popupWindow" style="overflow:auto"></div>')
@@ -148,7 +152,7 @@
                         draggable: false,
                         autoOpen: false,
                         show: {
-                            effect: "slide",
+                            effect: "fade",
                             duration: 700
                         },
                         hide: {
@@ -169,7 +173,7 @@
                         overlay: { opacity: 0.9, background: "black" },
                         //title: "",
                         height: 'auto',
-                        width: 700,
+                        width: wWidth > 800 ? 700 : wWidth * 0.8,
                         
                         close: function () {
                             $dialog.dialog('destroy').remove();
@@ -202,11 +206,27 @@
                 openPopup($(this).attr('href'));
                 $dialog.dialog({ title: "Create New Employee" });
             });
-            $('#myDatatable').on('click', 'a.popup', function (e) {
+            $('#myDatatable').on('click', 'a.popup.update', function (e) {
                 e.preventDefault();
                 openPopup($(this).attr('href'));
                 $dialog.dialog({ title: "Update Employee" });
             });
+            $('#myDatatable').on('click', 'a.popup.delete', function (e) {
+                e.preventDefault();
+                openPopup($(this).attr('href'));
+                $dialog.dialog({ title: "Delete Employee" });
+            });
+
+
+            //$('#myDatatable').on('shown.bs.collapse', function () {
+            //    $($.fn.dataTable.tables(true)).DataTable()
+            //        .columns.adjust();
+            //});
+
+            //$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+            //    $($.fn.dataTable.tables(true)).DataTable()
+            //        .columns.adjust();
+            //});
 
 
         });

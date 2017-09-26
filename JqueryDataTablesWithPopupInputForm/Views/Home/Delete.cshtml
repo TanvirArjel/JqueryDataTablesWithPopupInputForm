@@ -1,6 +1,4 @@
 ﻿@model JqueryDataTablesWithPopupInputForm.Models.Employee
-
-<h2>Delete Employee</h2>
 @using (Html.BeginForm("delete","home", FormMethod.Post,new { id= "popupForm" }))
 {
     @Html.HiddenFor(a=>a.EmployeeId)
@@ -27,9 +25,5 @@
     <div class="form-group">
         <label>Country</label>
         <p>@Model.Country</p>
-    </div>
-
-    <div>
-        <input type="submit" value="Delete" />
     </div>
 }

@@ -133,6 +133,8 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\css\DataTables\dataTables.bootstrap.min.css" />
+    <Content Include="Content\css\DataTables\fixedColumns.bootstrap.min.css" />
+    <Content Include="Content\css\DataTables\jqueryDataTables.popupInput.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -188,6 +190,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\DataTatables\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\DataTatables\dataTables.fixedColumns.min.js" />
     <Content Include="Scripts\DataTatables\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -226,7 +229,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
-    <Content Include="Views\Home\Save.cshtml" />
+    <Content Include="Views\Home\InserUpdate.cshtml" />
     <Content Include="Views\Home\Delete.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -24,7 +24,7 @@ namespace JqueryDataTablesWithPopupInputForm.Controllers
         }
 
         [HttpGet]
-        public ActionResult Save(int id)
+        public ActionResult InserUpdate(int id)
         {
             ViewBag.Title = "hello";
             Employee employee = _dbContext.Employees.FirstOrDefault(a => a.EmployeeId == id);
@@ -32,7 +32,7 @@ namespace JqueryDataTablesWithPopupInputForm.Controllers
         }
 
         [HttpPost]
-        public ActionResult Save(Employee employee)
+        public ActionResult InserUpdate(Employee employee)
         {
             bool status = false;
             if (ModelState.IsValid)

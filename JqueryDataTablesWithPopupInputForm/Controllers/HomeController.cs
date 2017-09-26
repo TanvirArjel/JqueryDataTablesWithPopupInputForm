@@ -24,15 +24,14 @@ namespace JqueryDataTablesWithPopupInputForm.Controllers
         }
 
         [HttpGet]
-        public ActionResult InserUpdate(int id)
+        public ActionResult InsertUpdate(int id)
         {
-            ViewBag.Title = "hello";
             Employee employee = _dbContext.Employees.FirstOrDefault(a => a.EmployeeId == id);
             return View(employee);
         }
 
         [HttpPost]
-        public ActionResult InserUpdate(Employee employee)
+        public ActionResult InsertUpdate(Employee employee)
         {
             bool status = false;
             if (ModelState.IsValid)
@@ -54,6 +53,12 @@ namespace JqueryDataTablesWithPopupInputForm.Controllers
 
             }
             return new JsonResult { Data = new { status = status } };
+        }
+
+        public ActionResult EmployeeDetails(int id)
+        {
+            Employee employee = _dbContext.Employees.FirstOrDefault(a => a.EmployeeId == id);
+            return View(employee);
         }
 
 

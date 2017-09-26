@@ -23,8 +23,8 @@
         <div class="container">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <strong style="font-size: 25px">Jquery Datables</strong>
-                    <a class="popup btn btn-success pull-right" href="@Url.Action("InserUpdate","Home", new {id = 0})">Add New Employee</a>
+                    <strong style="font-size: 25px">Jquery Datables With Popup Actions</strong>
+                    @*<a class="popup btn btn-success pull-right" href="@Url.Action("InserUpdate","Home", new {id = 0})">Add New Employee</a>*@
                 </div>
                 <div class="panel-body">
                     <table class="table table-bordered table-condensed" id="myDatatable" width="100%">
@@ -35,7 +35,7 @@
                                 <th>Email</th>
                                 <th>City</th>
                                 <th>Country</th>
-                                <th></th>
+                                <th class="createEmployee text-center"><a class="popup btn btn-success btn-xs" href="@Url.Action("InsertUpdate", "Home", new {id = 0})">Create Employee</a></th>
                             </tr>
                             <tr>
                                 <th>First Name</th>
@@ -44,7 +44,7 @@
                                 <th>City</th>
                                 <th>Country</th>
                                 <th>
-                                    <div style="display: inline-block; width: 100px">
+                                    <div style="display: inline-block; width: 170px">
                                         Actions
                                     </div>
                                 </th>
@@ -108,10 +108,11 @@
                     { "data": "Country", "width": "120px" },
                     {
                         "data": "EmployeeId",
-                        "width": "200px",
+                        "width": "180px",
                         "orderable": false,
                         "render": function (data) {
-                            return '<a class="popup update btn btn-primary btn-xs" href="/home/InserUpdate/' + data + '">Edit</a>' + " " +
+                            return '<a class="popup details btn btn-info btn-xs" href="/home/EmployeeDetails/' + data + '">Details</a>' + " " +
+                                '<a class="popup update btn btn-primary btn-xs" href="/home/InsertUpdate/' + data + '">Edit</a>' + ' ' +
                                 '<a class="popup delete btn btn-danger btn-xs" href="/home/delete/' + data + '">Delete</a>';
                         }
                     },
@@ -201,10 +202,15 @@
                 $dialog.dialog('open');
             }
 
-            $('.panel-heading').on('click', 'a.popup', function (e) {
+            $('.createEmployee').on('click', 'a.popup', function (e) {
                 e.preventDefault();
                 openPopup($(this).attr('href'));
                 $dialog.dialog({ title: "Create New Employee" });
+            });
+            $('#myDatatable').on('click', 'a.popup.details', function (e) {
+                e.preventDefault();
+                openPopup($(this).attr('href'));
+                $dialog.dialog({ title: "Employee Details" });
             });
             $('#myDatatable').on('click', 'a.popup.update', function (e) {
                 e.preventDefault();
